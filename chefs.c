@@ -1,8 +1,3 @@
-/**
- *0 pour clients
- *1 pour chefs
- *2 pour mecanos
- **/
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -92,7 +87,7 @@ int main(int argc, char * argv[], char * envp[])
             printf("Pb lecture de message\n\n");
             continue;
         }
-        printf("reception de la demande du client qui est la suivante: %s\n\n",msg_client_rcv.params.msg);
+        //printf("reception de la demande du client qui est la suivante: %s\n\n",msg_client_rcv.params.msg);
         client_pid = msg_client_rcv.params.caller;
         strcpy(msg_snd.params.msg,msg_client_rcv.params.msg);
         /*
@@ -104,14 +99,14 @@ int main(int argc, char * argv[], char * envp[])
             fprintf(stderr,"Pb envoie de message\n\n");
             continue;
         }
-        fprintf(stderr,"message envoye depuis le chef au mecano\n\n");
-        fprintf(stderr,"\nthis_pid: %d\n",this_pid);
+        //fprintf(stderr,"message envoye depuis le chef au mecano\n\n");
+        //fprintf(stderr,"\nthis_pid: %d\n",this_pid);
         
         /*
          *Attente de la fin du travail
          */
-        fprintf(stderr,"attente de terminaison du mecanico\n\n");
-        
+        //fprintf(stderr,"attente de terminaison du mecanico\n\n");
+        sleep(3);
         //attente de la reponse du mecanico
         
         if (msgrcv(qid, &msg_rcv, MSGSZ, this_pid, 0)< 0)
@@ -120,20 +115,20 @@ int main(int argc, char * argv[], char * envp[])
             continue;
         }
         
-        fprintf(stderr,"Message recu depuis le mecano\n");
+        //fprintf(stderr,"Message recu depuis le mecano\n");
         
         msg_snd=msg_rcv;
         msg_snd.msg_type = client_pid;
-        
+        /*
+         *Notification au client
+         */
         if(msgsnd(qid,&msg_snd,MSGSZ,0)==-1)
         {
             fprintf(stderr,"Pb envoie de message\n\n");
             continue;
         }
-        fprintf(stderr,"message envoye depuis le chef au Client\n\n");
-        /*
-         *Notification au client
-         */
+        //fprintf(stderr,"message envoye depuis le chef au Client\n\n");
+       
         
     }
     return 0;

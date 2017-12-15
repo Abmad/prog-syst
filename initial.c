@@ -133,7 +133,7 @@ int main(int argc, char * argv[], char * envp[])
 		    exit(-1);
 		}
     }
-    fprintf(stderr,"fait\n");
+    fprintf(stderr,"\nfait\n");
     
 	
 	/*
@@ -159,7 +159,7 @@ int main(int argc, char * argv[], char * envp[])
 		    exit(-1);
 		}
     }
-    fprintf(stderr,"fait\n");
+    fprintf(stderr,"\nfait\n");
 	
 	/*
 	*Creation clients de facon infinie

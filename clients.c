@@ -15,7 +15,7 @@
  */
 void signal_sigusr1(int s)
 {
-    printf("FIN\n");
+    printf("\nFIN\n");
     
     //Netoyages
     
@@ -73,7 +73,7 @@ int main(int argc, char * argv[], char * envp[])
         printf("Pb envoie de message\n");
         exit(-1);
     }
-    fprintf(stderr,"message envoye depuis le client au chef\n");
+    //fprintf(stderr,"message envoye depuis le client au chef\n");
     
     /*
      *Attente d'un client (Attente de la reponse du chef)
@@ -83,12 +83,12 @@ int main(int argc, char * argv[], char * envp[])
         printf("Pb lecture de message\n");
         exit(-1);
     }
-    fprintf(stderr,"reception de la demande traité du chef");
+    //fprintf(stderr,"reception de la demande traité du chef");
     
     /*
      *Afficher la demande et son resultat
      */
-    fprintf(stderr,"\n\nDemande :%s  ",msg_rcv.params.msg);
+    fprintf(stderr,"\n\nDemande traitée :%s  ",msg_rcv.params.msg);
     fprintf(stderr,"Duree :%d  ",msg_rcv.params.duree);
     fprintf(stderr,"NbOutils_1:%d  ",msg_rcv.params.nbOutils_1);
     fprintf(stderr,"NbOutils_2:%d  ",msg_rcv.params.nbOutils_2);

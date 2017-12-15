@@ -91,9 +91,9 @@ int main(int argc, char * argv[], char * envp[])
            fprintf(stderr,"Erreur de lecture dans la file\n");
             continue;
         }
-        fprintf(stderr,"\nMessage Bien recus !\n");
+        //fprintf(stderr,"\nMessage Bien recus !\n");
         pid_caller = msg.params.caller;
-        fprintf(stderr,"\n pid_caller: %d\n",pid_caller);
+        //fprintf(stderr,"\n pid_caller: %d\n",pid_caller);
 
 	
 		outil_1 = msg.params.nbOutils_1;
@@ -101,10 +101,10 @@ int main(int argc, char * argv[], char * envp[])
         outil_3 = msg.params.nbOutils_3;
         outil_4 = msg.params.nbOutils_4;
         
-        printf("Outil_1 : %d\n",outil_1);
-        printf("Outil_2 : %d\n",outil_2);
-        printf("Outil_3 : %d\n",outil_3);
-        printf("Outil_4 : %d\n",outil_4);
+        //printf("Outil_1 : %d\n",outil_1);
+        //printf("Outil_2 : %d\n",outil_2);
+        //printf("Outil_3 : %d\n",outil_3);
+        //printf("Outil_4 : %d\n",outil_4);
         
 		/*
 		*Reservation des outils (avec ensemble de semaphores)
@@ -151,7 +151,7 @@ int main(int argc, char * argv[], char * envp[])
 	  		fprintf(stderr,"Pb envoie de message\n");
             continue;
     	}
-	 	fprintf(stderr,"message envoye depuis le mecano au chef\n");	
+	 	//fprintf(stderr,"message envoye depuis le mecano au chef\n");	
 	}
 	
 	return 0;
