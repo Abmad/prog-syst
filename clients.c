@@ -89,7 +89,7 @@ int main(int argc, char * argv[], char * envp[])
     /*
      *Afficher la demande et son resultat
      */
-    fprintf(stderr,"\n\nDemande :%s  ",msg_rcv.params.msg);
+    fprintf(stderr,"\n\n Demande :%s  ",msg_rcv.params.msg);
     fprintf(stderr,"Duree :%d  ",msg_rcv.params.duree);
     fprintf(stderr,"NbOutils_1:%d  ",msg_rcv.params.nbOutils_1);
     fprintf(stderr,"NbOutils_2:%d  ",msg_rcv.params.nbOutils_2);
