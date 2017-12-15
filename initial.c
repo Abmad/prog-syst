@@ -10,7 +10,7 @@
 #include <sys/shm.h>
 #include <sys/sem.h>
 #include <sys/msg.h>
-
+#include <signal.h>
 #define TAILLE_MAX 100
 
 int semap, file_init;
@@ -46,9 +46,9 @@ int main(int argc, char * argv[], char * envp[])
 	int nbChefs, nbMecanos, itFor;
 	int nbOutils[4] = {1};
 	pid_t pid;
-	pid_t pidChefs[TAILLE_MAX];
-	pid_t pidMecanos[TAILLE_MAX];
-	pid_t pidClients[TAILLE_MAX];
+	//pid_t pidChefs[TAILLE_MAX];
+	//pid_t pidMecanos[TAILLE_MAX];
+	//pid_t pidClients[TAILLE_MAX];
 	key_t cle;
 	int res_init;
 	mon_sigaction(SIGINT, signal_sigint);
@@ -112,7 +112,7 @@ int main(int argc, char * argv[], char * envp[])
 		char * param[] = {"Chefs", parameter, argv[3], argv[4], argv[5], argv[6], NULL};
 
 		pid = fork();
-		pidChefs[itFor] = pid;  
+		//efs[itFor] = pid;  
 		if (pid==-1) break;  /* Probleme a la creation du i-ieme fils, on arrete les fork */
 		if (pid==0)
 		{
@@ -140,7 +140,7 @@ int main(int argc, char * argv[], char * envp[])
 		char * param[] = {"Mecanos", parameter, NULL};
 		
 		pid = fork(); 
-		pidMecanos[itFor] = pid;  
+		//pidMecanos[itFor] = pid;  
 		if (pid==-1) break;  /* Probleme a la creation du i-ieme fils, on arrete les fork */
 		if (pid==0)
 		{

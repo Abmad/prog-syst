@@ -13,22 +13,24 @@
 
 //structure client_to_chef
 typedef struct msg_client{
-  long msg_type;
-  char msg[TAILLE];
+    long msg_type;
+    char msg[TAILLE];
+    pid_t caller;
 }msg_client;
 //structure du rest
 typedef struct parametres{
-int duree;
-  int nbOutils_1;
-  int nbOutils_2;
-  int nbOutils_3;
-  int nbOutils_4;
+    int duree;
+    int nbOutils_1;
+    int nbOutils_2;
+    int nbOutils_3;
+    int nbOutils_4;
+    pid_t caller;
 }parametres;
 typedef struct message
 {
-  long msg_type;
-  parametres params;
-
+    long msg_type;
+    parametres params;
+    
 }message;
 
 

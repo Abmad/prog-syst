@@ -11,7 +11,7 @@
 #include <sys/sem.h>
 #include <sys/msg.h>
 #include "params.h"
-
+#include <signal.h>
 
 
 /*
@@ -47,6 +47,7 @@ int main(int argc, char * argv[], char * envp[])
 	message msg;
 	message msg_send;
 	pid=getpid();
+    pid_t pid_caller;
 	cle = ftok("/tmp", 'S');
 	if (cle==-1)
 	{
@@ -94,7 +95,7 @@ int main(int argc, char * argv[], char * envp[])
            fprintf(stderr,"Erreur de lecture dans la file\n");
 	    exit(-1);
         }
-	
+        pid_caller = msg.params.caller;
 	
 	/*outil_1 = msg.params.nbOutils_1;
 	outil_2 = msg.params.nbOutils_2;
@@ -115,7 +116,7 @@ int main(int argc, char * argv[], char * envp[])
 		*/
 
 	msg_send = msg;
-	msg_send.msg_type = MECANO_TO_CHEF;
+	msg_send.msg_type = pid_caller;
 	
 	if(msgsnd(qid,&msg_send,MSGSZ,IPC_NOWAIT)==-1)
     	{
