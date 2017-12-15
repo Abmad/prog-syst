@@ -1,13 +1,18 @@
 CC = gcc
 
 
-all : pere fils
+all : initial clients chefs mecanos 
 
-pere : pere.c
-	$(CC) -Wall pere.c -o pere
+initial : initial.c
+	$(CC) -Wall initial.c -o initial
 
-fils : fils.c
-	$(CC) -Wall fils.c -o fils
+clients : clients.c
+	$(CC) -Wall clients.c -o clients
 
+chefs : chefs.c
+	$(CC) -Wall chefs.c -o chefs
+
+mecanos : mecanos.c
+	$(CC) -Wall mecanos.c -o mecanos
 clean :
-	rm -f pere fils cle.serv
+	rm -f initial clients chefs mecanos
