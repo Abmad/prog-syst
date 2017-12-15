@@ -17,20 +17,14 @@ typedef struct msg_client{
   char msg[TAILLE];
 }msg_client;
 //structure du rest
-typedef struct parametres{
-int duree;
+typedef struct message
+{
+  long msg_type;
+  int duree;
   int nbOutils_1;
   int nbOutils_2;
   int nbOutils_3;
   int nbOutils_4;
-}parametres;
-typedef struct message
-{
-  long msg_type;
-  parametres params;
-
 }message;
-
-
 
 #endif /* params_h */

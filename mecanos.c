@@ -10,18 +10,9 @@
 #include <sys/shm.h>
 #include <sys/sem.h>
 #include <sys/msg.h>
+#include "params.h"
 
 
-//Structure du message
-struct message
-{
-    long msg_type;
-    int duree;
-    int nbOutils_1;
-    int nbOutils_2;
-    int nbOutils_3;
-    int nbOutils_4;
-};
 
 /*
 *Attente SIGUSR1 pour nettoyage et fin
@@ -48,20 +39,23 @@ void mon_sigaction(int signal, void (*f)(int))
 // 1 param, numero d'ordre 
 int main(int argc, char * argv[], char * envp[])
 {
+
 	key_t cle;
 	pid_t pid;
-	int semap, file_init, read;
-	int outil_1, outil_2, outil_3, outil_4;
-	
+	int semap, qid;
+	//int outil_1, outil_2, outil_3, outil_4;
+	message msg;
+	message msg_send;
 	pid=getpid();
 	cle = ftok("/tmp", 'S');
 	if (cle==-1)
 	{
 		printf("(%d) Pb creation cle\n",pid);
 		exit(-1);
-    }
+    	}
 
-	mon_sigaction(SIGUSR1, signal_sigusr1);
+
+	
 
 	/*
 	*Recuperation semaphores
@@ -73,27 +67,39 @@ int main(int argc, char * argv[], char * envp[])
 		exit(-1);
     }
 	
+	
 	/*
 	*Recuperation file de message
 	*/
-	file_init= msgget(cle, 0666);
-    if (file_init == -1)
+	qid= msgget(cle, 0666);
+    if (qid == -1)
     {
     	printf("Erreur recuperation de file\n");
-	}
+	exit(-1);
+    }
+	
 	
 	//Faire de facon infinie
-	while(1)
+	for(;;)
 	{
-		/*
+	
+	/*
 		*Reception d'un travail dans la file de message, un travail est (duree +nb outils de chaque type)
 		*/
-		struct message msg;
-        read= msgrcv(file_init, &msg, 5*sizeof(int), 1, 0);//Le 1 ici correspond au type de messages à receptionner
-        if (read == -1)
+	
+		
+        //Le CHEF_TO_MECANO ici correspond au type de messages à receptionner
+        if (msgrcv(qid, &msg, MSGSZ, CHEF_TO_MECANO, 0) == -1)
         {
-            printf("Erreur de lecture dans la file\n");
+           fprintf(stderr,"Erreur de lecture dans la file\n");
+	    exit(-1);
         }
+	
+	
+	/*outil_1 = msg.params.nbOutils_1;
+	outil_2 = msg.params.nbOutils_2;
+	outil_3 = msg.params.nbOutils_3;
+	outil_4 = msg.params.nbOutils_4;*/
 	
 		/*
 		*Reservation des outils (avec ensemble de semaphores)
@@ -102,11 +108,21 @@ int main(int argc, char * argv[], char * envp[])
 		/*
 		*Execution du travail (un sleep)
 		*/
-		sleep(msg.duree);
+		sleep(msg.params.duree);
 	
 		/*
 		*Notification de la fin du travail au chef a l'origine du travail
 		*/
+
+	msg_send = msg;
+	msg_send.msg_type = MECANO_TO_CHEF;
+	
+	if(msgsnd(qid,&msg_send,MSGSZ,IPC_NOWAIT)==-1)
+    	{
+	  fprintf(stderr,"Pb envoie de message\n");
+	  exit(-1);
+    	}
+	 fprintf(stderr,"message envoye depuis le mecano au chef\n");	
 	}
 	
 	return 0;

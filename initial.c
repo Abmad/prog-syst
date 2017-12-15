@@ -43,7 +43,7 @@ void mon_sigaction(int signal, void (*f)(int))
 // 6 param (nb chefs, nb mecanos, nb outils de chacun des 4 types)  
 int main(int argc, char * argv[], char * envp[])
 {
-	int nbChefs, nbMecanos, nb_1, nb_2, nb_3, nb_4, itFor;
+	int nbChefs, nbMecanos, itFor;
 	int nbOutils[4] = {1};
 	pid_t pid;
 	pid_t pidChefs[TAILLE_MAX];
@@ -63,11 +63,6 @@ int main(int argc, char * argv[], char * envp[])
 	}
 	nbChefs = atoi(argv[1]);
 	nbMecanos = atoi(argv[2]);
-	nb_1 = atoi(argv[3]);
-	nb_2 = atoi(argv[4]);
-	nb_3 = atoi(argv[5]);
-	nb_4 = atoi(argv[6]);
-	
 	/*
 	*Creation IPC (File de message + ensemble de semaphores)
 	*/
@@ -112,13 +107,16 @@ int main(int argc, char * argv[], char * envp[])
 		
 		char parameter[32];
 		sprintf(parameter, "%d", itFor);
-		char * param[] = {"Chefs", parameter, argv[4], argv[5], argv[6], argv[7], NULL};
+		//fprintf(stderr,"argv 2 %s\n",argv[4]);
+
+		char * param[] = {"Chefs", parameter, argv[3], argv[4], argv[5], argv[6], NULL};
 
 		pid = fork();
 		pidChefs[itFor] = pid;  
 		if (pid==-1) break;  /* Probleme a la creation du i-ieme fils, on arrete les fork */
 		if (pid==0)
 		{
+
 		    /* c'est le i-eme fils   */
 		    execve("Chefs", param, envp);
 		    /* en principe jamais atteint */
@@ -138,6 +136,7 @@ int main(int argc, char * argv[], char * envp[])
 		
 		char parameter[32];
 		sprintf(parameter, "%d", itFor);
+
 		char * param[] = {"Mecanos", parameter, NULL};
 		
 		pid = fork(); 
@@ -161,11 +160,11 @@ int main(int argc, char * argv[], char * envp[])
     while(1)
     {
 		fprintf(stderr,".");
-	
 		pid = fork();  
 		if (pid==-1) break;  /* Probleme a la creation du i-ieme fils, on arrete les fork */
 		if (pid==0)
 		{
+
 		    /* c'est le i-eme fils   */
 		     execve("Clients", param, envp);
 		    /* en principe jamais atteint */
