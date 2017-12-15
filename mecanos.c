@@ -39,25 +39,24 @@ void mon_sigaction(int signal, void (*f)(int))
 // 1 param, numero d'ordre 
 int main(int argc, char * argv[], char * envp[])
 {
-
 	key_t cle;
-	pid_t pid;
+	pid_t pid, pid_caller;
 	int semap, qid;
-	//int outil_1, outil_2, outil_3, outil_4;
+	int outil_1, outil_2, outil_3, outil_4;
+	struct sembuf sem = {0,-1,SEM_UNDO};
 	message msg;
 	message msg_send;
+	
 	pid=getpid();
-    pid_t pid_caller;
 	cle = ftok("/tmp", 'S');
 	if (cle==-1)
 	{
 		printf("(%d) Pb creation cle\n",pid);
 		exit(-1);
-    	}
+    }
 
-
+	mon_sigaction(SIGUSR1, signal_sigusr1);
 	
-
 	/*
 	*Recuperation semaphores
 	*/
@@ -68,7 +67,6 @@ int main(int argc, char * argv[], char * envp[])
 		exit(-1);
     }
 	
-	
 	/*
 	*Recuperation file de message
 	*/
@@ -76,15 +74,13 @@ int main(int argc, char * argv[], char * envp[])
     if (qid == -1)
     {
     	printf("Erreur recuperation de file\n");
-	exit(-1);
+		exit(-1);
     }
 	
-	
 	//Faire de facon infinie
-	for(;;)
+	while(1)
 	{
-	
-	/*
+		/*
 		*Reception d'un travail dans la file de message, un travail est (duree +nb outils de chaque type)
 		*/
 	
@@ -100,28 +96,62 @@ int main(int argc, char * argv[], char * envp[])
         fprintf(stderr,"\n pid_caller: %d\n",pid_caller);
 
 	
+		outil_1 = msg.params.nbOutils_1;
+        outil_2 = msg.params.nbOutils_2;
+        outil_3 = msg.params.nbOutils_3;
+        outil_4 = msg.params.nbOutils_4;
+        
+        printf("Outil_1 : %d\n",outil_1);
+        printf("Outil_2 : %d\n",outil_2);
+        printf("Outil_3 : %d\n",outil_3);
+        printf("Outil_4 : %d\n",outil_4);
+        
 		/*
 		*Reservation des outils (avec ensemble de semaphores)
 		*/
+		sem.sem_num = 0;
+		sem.sem_op = -outil_1;
+		semop(semap,&sem,1);
+		sem.sem_num = 1;
+		sem.sem_op = -outil_2;
+		semop(semap,&sem,1);
+		sem.sem_num = 2;
+		sem.sem_op = -outil_3;
+		semop(semap,&sem,1);
+		sem.sem_num = 3;
+		sem.sem_op = -outil_4;
+		semop(semap,&sem,1);
 	
 		/*
 		*Execution du travail (un sleep)
 		*/
 		sleep(msg.params.duree);
-	
+		
 		/*
-		*Notification de la fin du travail au chef a l'origine du travail
+		*On rend les outils
 		*/
+		sem.sem_num = 0;
+		sem.sem_op = outil_1;
+		semop(semap,&sem,1);
+		sem.sem_num = 1;
+		sem.sem_op = outil_2;
+		semop(semap,&sem,1);
+		sem.sem_num = 2;
+		sem.sem_op = outil_3;
+		semop(semap,&sem,1);
+		sem.sem_num = 3;
+		sem.sem_op = outil_4;
+		semop(semap,&sem,1);
 
-	msg_send = msg;
-	msg_send.msg_type = pid_caller;
+		msg_send = msg;
+		msg_send.msg_type = pid_caller;
 	
-	if(msgsnd(qid,&msg_send,MSGSZ,IPC_NOWAIT)==-1)
+		if(msgsnd(qid,&msg_send,MSGSZ,IPC_NOWAIT)==-1)
     	{
-	  fprintf(stderr,"Pb envoie de message\n");
+	  		fprintf(stderr,"Pb envoie de message\n");
             continue;
     	}
-	 fprintf(stderr,"message envoye depuis le mecano au chef\n");	
+	 	fprintf(stderr,"message envoye depuis le mecano au chef\n");	
 	}
 	
 	return 0;

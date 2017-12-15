@@ -9,6 +9,7 @@
 #include <sys/msg.h>
 #include "params.h"
 #include <signal.h>
+
 /*
  *Attente SIGUSR1 pour nettoyage et fin
  */
@@ -37,10 +38,12 @@ int main(int argc, char * argv[], char * envp[])
     key_t cle;
     message msg_snd;
     message msg_rcv;
-    mon_sigaction(SIGUSR1, signal_sigusr1);
     int cle_file;
     pid_t cl_pid;
+    
+    mon_sigaction(SIGUSR1, signal_sigusr1);
     cl_pid = getpid();
+    
     /*
      *Recuperation IPC
      */
@@ -59,8 +62,6 @@ int main(int argc, char * argv[], char * envp[])
         exit(-1);
     }
     
-    
-    
     /*
      *Transmission demande a ce chef
      */
@@ -73,8 +74,6 @@ int main(int argc, char * argv[], char * envp[])
         exit(-1);
     }
     fprintf(stderr,"message envoye depuis le client au chef\n");
-    
-    
     
     /*
      *Attente d'un client (Attente de la reponse du chef)
@@ -89,23 +88,12 @@ int main(int argc, char * argv[], char * envp[])
     /*
      *Afficher la demande et son resultat
      */
-    fprintf(stderr,"\n\n Demande :%s  ",msg_rcv.params.msg);
+    fprintf(stderr,"\n\nDemande :%s  ",msg_rcv.params.msg);
     fprintf(stderr,"Duree :%d  ",msg_rcv.params.duree);
     fprintf(stderr,"NbOutils_1:%d  ",msg_rcv.params.nbOutils_1);
     fprintf(stderr,"NbOutils_2:%d  ",msg_rcv.params.nbOutils_2);
     fprintf(stderr,"NbOutils_3:%d  ",msg_rcv.params.nbOutils_3);
     fprintf(stderr,"NbOutils_4:%d  \n",msg_rcv.params.nbOutils_4);
-    
-    
-    
-    
-    /*
-     *Mise en attente du chef le moins occupe
-     */
-    
-    
-    
-    
     
     return 0;
 }

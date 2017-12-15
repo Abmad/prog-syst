@@ -43,14 +43,12 @@ void mon_sigaction(int signal, void (*f)(int))
 // 6 param (nb chefs, nb mecanos, nb outils de chacun des 4 types)  
 int main(int argc, char * argv[], char * envp[])
 {
-	int nbChefs, nbMecanos, itFor;
-	int nbOutils[4] = {1};
+	int nbChefs, nbMecanos, nb_1, nb_2, nb_3, nb_4, itFor;
+	unsigned short nbOutils[4] = {1};
 	pid_t pid;
-	//pid_t pidChefs[TAILLE_MAX];
-	//pid_t pidMecanos[TAILLE_MAX];
-	//pid_t pidClients[TAILLE_MAX];
 	key_t cle;
 	int res_init;
+	
 	mon_sigaction(SIGINT, signal_sigint);
 	
 	/*
@@ -63,11 +61,26 @@ int main(int argc, char * argv[], char * envp[])
 	}
 	nbChefs = atoi(argv[1]);
 	nbMecanos = atoi(argv[2]);
+	nb_1 = atoi(argv[3]);
+	nb_2 = atoi(argv[4]);
+	nb_3 = atoi(argv[5]);
+	nb_4 = atoi(argv[6]);
+	
+	nbOutils[0] = nb_1;
+	nbOutils[1] = nb_2;
+	nbOutils[2] = nb_3;
+	nbOutils[3] = nb_4;
+	
 	/*
 	*Creation IPC (File de message + ensemble de semaphores)
 	*/
 	//Cle
 	cle = ftok("/tmp", 'S');
+	if(cle == -1)
+	{
+		printf("Erreur creation cle");
+		exit(-1);
+	}
 	
 	//Ensemble de semaphores
 	semap = semget(cle,1,IPC_CREAT | IPC_EXCL | 0660);
@@ -107,16 +120,13 @@ int main(int argc, char * argv[], char * envp[])
 		
 		char parameter[32];
 		sprintf(parameter, "%d", itFor);
-		//fprintf(stderr,"argv 2 %s\n",argv[4]);
-
 		char * param[] = {"Chefs", parameter, argv[3], argv[4], argv[5], argv[6], NULL};
 
 		pid = fork();
-		//efs[itFor] = pid;  
+		
 		if (pid==-1) break;  /* Probleme a la creation du i-ieme fils, on arrete les fork */
 		if (pid==0)
 		{
-
 		    /* c'est le i-eme fils   */
 		    execve("Chefs", param, envp);
 		    /* en principe jamais atteint */
@@ -136,11 +146,10 @@ int main(int argc, char * argv[], char * envp[])
 		
 		char parameter[32];
 		sprintf(parameter, "%d", itFor);
-
 		char * param[] = {"Mecanos", parameter, NULL};
 		
 		pid = fork(); 
-		//pidMecanos[itFor] = pid;  
+		 
 		if (pid==-1) break;  /* Probleme a la creation du i-ieme fils, on arrete les fork */
 		if (pid==0)
 		{
@@ -164,7 +173,6 @@ int main(int argc, char * argv[], char * envp[])
 		if (pid==-1) break;  /* Probleme a la creation du i-ieme fils, on arrete les fork */
 		if (pid==0)
 		{
-
 		    /* c'est le i-eme fils   */
 		     execve("Clients", param, envp);
 		    /* en principe jamais atteint */

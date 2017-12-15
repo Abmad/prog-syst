@@ -46,7 +46,6 @@ int main(int argc, char * argv[], char * envp[])
      */
     pid_t this_pid = getpid();
     srand(this_pid);
-    //long type = getpid();
     
     int r = rand();
     key_t cle;
@@ -64,7 +63,7 @@ int main(int argc, char * argv[], char * envp[])
     msg_snd.params.nbOutils_3 = r%max_nbOutils_3;
     msg_snd.params.nbOutils_4 = r%max_nbOutils_4;
     msg_snd.msg_type = CHEF_TO_MECANO;
-    msg_snd.params.duree = r%5;//(r*1500)+500;
+    msg_snd.params.duree = r%5;
     msg_snd.params.caller = getpid();
     pid_t client_pid;
     //Faire de facon infini
@@ -83,12 +82,11 @@ int main(int argc, char * argv[], char * envp[])
         exit(-1);
     }
     
-    for(;;)
+    while(1)
     {
         /*
          *Attente d'un client
          */
-        
         if (msgrcv(qid, &msg_client_rcv, MSGSZ, CLIENT_TO_CHEF, 0) < 0)
         {
             printf("Pb lecture de message\n\n");
@@ -113,7 +111,6 @@ int main(int argc, char * argv[], char * envp[])
          *Attente de la fin du travail
          */
         fprintf(stderr,"attente de terminaison du mecanico\n\n");
-        //sleep(10);
         
         //attente de la reponse du mecanico
         
@@ -141,5 +138,3 @@ int main(int argc, char * argv[], char * envp[])
     }
     return 0;
 }
-
-
