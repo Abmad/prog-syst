@@ -14,7 +14,8 @@
  * Declare the message structure.
  */
 
-typedef struct Msg{
+typedef struct Msg
+{
     long    mtype;
     char    mtext[MSGSZ];
 }Msg;
@@ -46,10 +47,6 @@ void mon_sigaction(int signal, void (*f)(int))
 // 5 param (num d'ordre, nb outils de chaque type dispo)
 int main(int argc, char * argv[], char * envp[])
 {
-    
-    
-    
-    
     /*
      *Recuperation IPC
      */
@@ -57,53 +54,62 @@ int main(int argc, char * argv[], char * envp[])
     int qid;
     Msg msg;
     size_t msg_size;
-    //Faire de facon infini
-
-    while(1){
-   
+    
     mon_sigaction(SIGUSR1, signal_sigusr1);
-    //Cle pour recuperer la file
-    cle = ftok("toto",'a');
-    qid = msgget(cle, IPC_CREAT| IPC_EXCL | 0660);
     
-    if (cle < 0) {
-        printf("Pb creation cle\n");
-        exit(-1);
-    }
-    
-    if (qid == -1)
+    //Faire de facon infini
+    while(1)
     {
-        printf("Pb creation file de message\n");
-        exit(-1);
-    }
-    /*
-     *Attente d'un client
-     */
-        
-    if (msgrcv(cle, &msg, MSGSZ, 1, 0) < 0) {
-        printf("Pb lecture de message\n");
-        exit(-1);
-    }
-        msg_size = msgrcv(cle, &msg, MSGSZ, 1, 0);
-    /*
-     *Postage du travail sur la file de message (c'est a lui de determiner la duree et le nb outils)
-     */
-    if(msgsnd(cle,&msg,sizeof(msg.mtext),0)==-1){
-        printf("Pb envoie de message\n");
-        exit(-1);
-    }else
-        printf("message envoye depuis le chef au fil");
-    /*
-     *Attente de la fin du travail
-     */
-        printf("attente de terminaison du mecanico");
-        wait(NULL);
     
-    /*
-     *Notification au client
-     */
-        
+    
+    	//Cle pour recuperer la file
+    	cle = ftok("/tmp", 'S');
+    	if (cle == -1) 
+    	{
+        	printf("Pb creation cle\n");
+        	exit(-1);
+   		}
+    
+    	qid = msgget(cle, 0666);
+    	if (qid == -1)
+    	{
+        	printf("Pb creation file de message\n");
+        	exit(-1);
+    	}
+    
+    	/*
+     	*Attente d'un client
+     	*/   
+    	if (msgrcv(cle, &msg, MSGSZ, 1, 0) < 0) 
+    	{
+        	printf("Pb lecture de message\n");
+        	exit(-1);
+   		}
+    
+    	msg_size = msgrcv(cle, &msg, MSGSZ, 1, 0);
+    
+    	/*
+     	*Postage du travail sur la file de message (c'est a lui de determiner la duree et le nb outils)
+     	*/
+     
+    	if(msgsnd(cle,&msg,sizeof(msg.mtext),0)==-1)
+    	{
+    	    printf("Pb envoie de message\n");
+    	    exit(-1);
+    	}else printf("message envoye depuis le chef au fil");
+    	
+    	/*
+    	 *Attente de la fin du travail
+    	 */
+    	printf("attente de terminaison du mecanico");
+    	wait(NULL);
+    	
+    	/*
+    	 *Notification au client
+    	 */
+    	    
     }
     return 0;
 }
+
 

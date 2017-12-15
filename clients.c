@@ -33,6 +33,8 @@ void mon_sigaction(int signal, void (*f)(int))
 // 1 param, le nb de chef  
 int main(int argc, char * argv[], char * envp[])
 {	
+	key_t cle;
+
 	mon_sigaction(SIGUSR1, signal_sigusr1);
 
 	while(1)

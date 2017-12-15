@@ -1,18 +1,18 @@
 CC = gcc
 
 
-all : initial clients chefs mecanos 
+all : init Clients Chefs Mecanos 
 
-initial : initial.c
-	$(CC) -Wall initial.c -o initial
+init : initial.c
+	$(CC) -Wall initial.c -o init
 
-clients : clients.c
-	$(CC) -Wall clients.c -o clients
+Clients : clients.c
+	$(CC) -Wall clients.c -o Clients
 
-chefs : chefs.c
-	$(CC) -Wall chefs.c -o chefs
+Chefs : chefs.c
+	$(CC) -Wall chefs.c -o Chefs
 
-mecanos : mecanos.c
-	$(CC) -Wall mecanos.c -o mecanos
+Mecanos : mecanos.c
+	$(CC) -Wall mecanos.c -o Mecanos
 clean :
-	rm -f initial clients chefs mecanos
+	rm -f init Clients Chefs Mecanos
