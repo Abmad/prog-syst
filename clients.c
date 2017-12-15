@@ -41,7 +41,6 @@ int main(int argc, char * argv[], char * envp[])
     int cle_file;
     pid_t cl_pid;
     cl_pid = getpid();
-    int cpt_test =0;
     /*
      *Recuperation IPC
      */
@@ -60,41 +59,38 @@ int main(int argc, char * argv[], char * envp[])
         exit(-1);
     }
     
-    for(;;)
+    
+    
+    /*
+     *Transmission demande a ce chef
+     */
+    sprintf(msg_snd.params.msg, "demande num %d",cl_pid);
+    msg_snd.msg_type = CLIENT_TO_CHEF;
+    msg_snd.params.caller = cl_pid;
+    if(msgsnd(cle_file,&msg_snd,MSGSZ,0)==-1)
     {
-        
-        /*
-         *Transmission demande a ce chef
-         */
-        sprintf(msg_snd.params.msg, "demande num %d",cpt_test);
-        msg_snd.msg_type = CLIENT_TO_CHEF;
-        msg_snd.params.caller = cl_pid;
-        if(msgsnd(cle_file,&msg_snd,MSGSZ,0)==-1)
-        {
-            printf("Pb envoie de message\n");
-            continue;
-        }
-        printf("message envoye depuis le client au chef\n");
-        
-        
-        
-        /*
-         *Attente d'un client (Attente de la reponse du chef)
-         */
-        if (msgrcv(cle_file, &msg_rcv, MSGSZ, cl_pid, 0) < 0)
-        {
-            printf("Pb lecture de message\n");
-            continue;
-        }
-        printf("reception de la demande traité du chef");
-        
-        /*
-         *Afficher la demande et son resultat
-         */
-        
-        fprintf(stderr,"cpt: %d",cpt_test);
-        cpt_test++;
+        printf("Pb envoie de message\n");
+        exit(-1);
     }
+    printf("message envoye depuis le client au chef\n");
+    
+    
+    
+    /*
+     *Attente d'un client (Attente de la reponse du chef)
+     */
+    if (msgrcv(cle_file, &msg_rcv, MSGSZ, cl_pid, 0) < 0)
+    {
+        printf("Pb lecture de message\n");
+         exit(-1);
+    }
+    printf("reception de la demande traité du chef");
+    
+    /*
+     *Afficher la demande et son resultat
+     */
+    
+    
     
     
     
