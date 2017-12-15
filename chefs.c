@@ -92,7 +92,7 @@ int main(int argc, char * argv[], char * envp[])
         if (msgrcv(qid, &msg_client_rcv, MSGSZ, CLIENT_TO_CHEF, 0) < 0)
         {
             printf("Pb lecture de message\n\n");
-            exit(-1);
+            continue;
         }
         printf("reception de la demande du client qui est la suivante: %s\n\n",msg_client_rcv.params.msg);
         client_pid = msg_client_rcv.params.caller;
@@ -103,7 +103,7 @@ int main(int argc, char * argv[], char * envp[])
         if(msgsnd(qid,&msg_snd,MSGSZ,0)==-1)
         {
             fprintf(stderr,"Pb envoie de message\n\n");
-            exit(-1);
+            continue;
         }
         fprintf(stderr,"message envoye depuis le chef au mecano\n\n");
         fprintf(stderr,"\nthis_pid: %d\n",this_pid);
@@ -119,7 +119,7 @@ int main(int argc, char * argv[], char * envp[])
         if (msgrcv(qid, &msg_rcv, MSGSZ, this_pid, 0)< 0)
         {
             fprintf(stderr,"Pb lecture de message\n");
-            exit(-1);
+            continue;
         }
         
         fprintf(stderr,"Message recu depuis le mecano\n");
@@ -130,7 +130,7 @@ int main(int argc, char * argv[], char * envp[])
         if(msgsnd(qid,&msg_snd,MSGSZ,0)==-1)
         {
             fprintf(stderr,"Pb envoie de message\n\n");
-            exit(-1);
+            continue;
         }
         fprintf(stderr,"message envoye depuis le chef au Client\n\n");
         /*
