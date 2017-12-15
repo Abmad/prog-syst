@@ -96,6 +96,7 @@ int main(int argc, char * argv[], char * envp[])
         }
         printf("reception de la demande du client qui est la suivante: %s\n\n",msg_client_rcv.params.msg);
         client_pid = msg_client_rcv.params.caller;
+        strcpy(msg_snd.params.msg,msg_client_rcv.params.msg);
         /*
          *Postage du travail sur la file de message (c'est a lui de determiner la duree et le nb outils)
          */
