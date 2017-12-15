@@ -53,7 +53,7 @@ int main(int argc, char * argv[], char * envp[])
     int qid;
     mon_sigaction(SIGUSR1, signal_sigusr1);
     message msg_snd,msg_rcv;
-    msg_client msg_client_rcv;
+    message msg_client_rcv;
     int max_nbOutils_1,max_nbOutils_2,max_nbOutils_3,max_nbOutils_4;
     max_nbOutils_1 = atoi(argv[2]);
     max_nbOutils_2 = atoi(argv[3]);
@@ -66,7 +66,7 @@ int main(int argc, char * argv[], char * envp[])
     msg_snd.msg_type = CHEF_TO_MECANO;
     msg_snd.params.duree = r%5;//(r*1500)+500;
     msg_snd.params.caller = getpid();
-    pid_t caller_pid;
+    pid_t client_pid;
     //Faire de facon infini
     //Cle pour recuperer la file
     cle = ftok("/tmp", 'S');
@@ -94,8 +94,8 @@ int main(int argc, char * argv[], char * envp[])
             printf("Pb lecture de message\n\n");
             exit(-1);
         }
-        printf("reception de la demande du client qui est la suivante: %s\n\n",msg_client_rcv.msg);
-        caller_pid = msg_client_rcv.caller;
+        printf("reception de la demande du client qui est la suivante: %s\n\n",msg_client_rcv.params.msg);
+        client_pid = msg_client_rcv.params.caller;
         /*
          *Postage du travail sur la file de message (c'est a lui de determiner la duree et le nb outils)
          */
@@ -122,10 +122,10 @@ int main(int argc, char * argv[], char * envp[])
             exit(-1);
         }
         
-        //fprintf(stderr,"Message recu depuis le mecano\n");
+        fprintf(stderr,"Message recu depuis le mecano\n");
         
         msg_snd=msg_rcv;
-        msg_snd.msg_type = caller_pid;
+        msg_snd.msg_type = client_pid;
         
         if(msgsnd(qid,&msg_snd,MSGSZ,0)==-1)
         {

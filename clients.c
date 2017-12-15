@@ -35,11 +35,12 @@ void mon_sigaction(int signal, void (*f)(int))
 int main(int argc, char * argv[], char * envp[])
 {	
     key_t cle;
-    msg_client msg_snd;
+    message msg_snd;
     message msg_rcv;
     mon_sigaction(SIGUSR1, signal_sigusr1);
     int cle_file;
-    
+    pid_t cl_pid;
+    cl_pid = getpid();
     int cpt_test =0;
     /*
      *Recuperation IPC
@@ -65,13 +66,13 @@ int main(int argc, char * argv[], char * envp[])
         /*
          *Transmission demande a ce chef
          */
-        sprintf(msg_snd.msg, "demande num %d", cpt_test);
+        sprintf(msg_snd.params.msg, "demande num %d",cpt_test);
         msg_snd.msg_type = CLIENT_TO_CHEF;
-        msg_snd.caller = getpid();
+        msg_snd.params.caller = cl_pid;
         if(msgsnd(cle_file,&msg_snd,MSGSZ,0)==-1)
         {
             printf("Pb envoie de message\n");
-            exit(-1);
+            continue;
         }
         printf("message envoye depuis le client au chef\n");
         
@@ -80,10 +81,10 @@ int main(int argc, char * argv[], char * envp[])
         /*
          *Attente d'un client (Attente de la reponse du chef)
          */
-        if (msgrcv(cle_file, &msg_rcv, MSGSZ, getpid(), 0) < 0)
+        if (msgrcv(cle_file, &msg_rcv, MSGSZ, cl_pid, 0) < 0)
         {
             printf("Pb lecture de message\n");
-            exit(-1);
+            continue;
         }
         printf("reception de la demande traité du chef");
         
@@ -92,6 +93,7 @@ int main(int argc, char * argv[], char * envp[])
          */
         
         fprintf(stderr,"cpt: %d",cpt_test);
+        cpt_test++;
     }
     
     

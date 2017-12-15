@@ -5,18 +5,13 @@
 #define CHEF_TO_MECANO 2
 #define MECANO_TO_CHEF 3
 #define CHEF_TO_CLIENT 4
-#define MSGSZ ((sizeof(int)*5)+sizeof(pid_t))
 #define TAILLE 400
+#define MSGSZ ((sizeof(int)*5)+sizeof(pid_t)+(sizeof(char)*TAILLE))
+
 /*
  * Declaration des structures de message
  */
 
-//structure client_to_chef
-typedef struct msg_client{
-    long msg_type;
-    char msg[TAILLE];
-    pid_t caller;
-}msg_client;
 //structure du rest
 typedef struct parametres{
     int duree;
@@ -24,6 +19,7 @@ typedef struct parametres{
     int nbOutils_2;
     int nbOutils_3;
     int nbOutils_4;
+    char msg[TAILLE];
     pid_t caller;
 }parametres;
 typedef struct message
