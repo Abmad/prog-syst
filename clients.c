@@ -72,7 +72,7 @@ int main(int argc, char * argv[], char * envp[])
         printf("Pb envoie de message\n");
         exit(-1);
     }
-    printf("message envoye depuis le client au chef\n");
+    fprintf(stderr,"message envoye depuis le client au chef\n");
     
     
     
@@ -82,14 +82,19 @@ int main(int argc, char * argv[], char * envp[])
     if (msgrcv(cle_file, &msg_rcv, MSGSZ, cl_pid, 0) < 0)
     {
         printf("Pb lecture de message\n");
-         exit(-1);
+        exit(-1);
     }
-    printf("reception de la demande traité du chef");
+    fprintf(stderr,"reception de la demande traité du chef");
     
     /*
      *Afficher la demande et son resultat
      */
     
+    fprintf(stderr,"Duree :%d  ",msg_rcv.params.duree);
+    fprintf(stderr,"\nNbOutils_1:%d  ",msg_rcv.params.nbOutils_1);
+    fprintf(stderr,"NbOutils_2:%d  ",msg_rcv.params.nbOutils_2);
+    fprintf(stderr,"NbOutils_3:%d  ",msg_rcv.params.nbOutils_3);
+    fprintf(stderr,"NbOutils_4:%d  \n",msg_rcv.params.nbOutils_4);
     
     
     
