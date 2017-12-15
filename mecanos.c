@@ -90,7 +90,7 @@ int main(int argc, char * argv[], char * envp[])
 	
 		
         //Le CHEF_TO_MECANO ici correspond au type de messages à receptionner
-        if (msgrcv(qid, &msg, MSGSZ, CHEF_TO_MECANO, IPC_NOWAIT) == -1)
+        if (msgrcv(qid, &msg, MSGSZ, CHEF_TO_MECANO, 0) == -1)
         {
            fprintf(stderr,"Erreur de lecture dans la file\n");
             continue;

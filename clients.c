@@ -67,7 +67,7 @@ int main(int argc, char * argv[], char * envp[])
     sprintf(msg_snd.params.msg, "demande num %d",cl_pid);
     msg_snd.msg_type = CLIENT_TO_CHEF;
     msg_snd.params.caller = cl_pid;
-    if(msgsnd(cle_file,&msg_snd,MSGSZ,IPC_NOWAIT)==-1)
+    if(msgsnd(cle_file,&msg_snd,MSGSZ,0)==-1)
     {
         printf("Pb envoie de message\n");
         exit(-1);
@@ -79,7 +79,7 @@ int main(int argc, char * argv[], char * envp[])
     /*
      *Attente d'un client (Attente de la reponse du chef)
      */
-    if (msgrcv(cle_file, &msg_rcv, MSGSZ, cl_pid, IPC_NOWAIT) < 0)
+    if (msgrcv(cle_file, &msg_rcv, MSGSZ, cl_pid, 0) < 0)
     {
         printf("Pb lecture de message\n");
         exit(-1);
