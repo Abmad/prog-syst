@@ -44,7 +44,8 @@ int main(int argc, char * argv[], char * envp[])
     /*
      *Recuperation IPC
      */
-    srand(getpid());
+    pid_t this_pid = getpid();
+    srand(this_pid);
     //long type = getpid();
     
     int r = rand();
@@ -105,7 +106,7 @@ int main(int argc, char * argv[], char * envp[])
             exit(-1);
         }
         fprintf(stderr,"message envoye depuis le chef au mecano\n\n");
-        
+        fprintf(stderr,"\nthis_pid: %d\n",this_pid);
         
         /*
          *Attente de la fin du travail
@@ -115,7 +116,7 @@ int main(int argc, char * argv[], char * envp[])
         
         //attente de la reponse du mecanico
         
-        if (msgrcv(qid, &msg_rcv, MSGSZ, getpid(), 0)< 0)
+        if (msgrcv(qid, &msg_rcv, MSGSZ, this_pid, 0)< 0)
         {
             fprintf(stderr,"Pb lecture de message\n");
             exit(-1);

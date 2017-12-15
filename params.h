@@ -5,7 +5,7 @@
 #define CHEF_TO_MECANO 2
 #define MECANO_TO_CHEF 3
 #define CHEF_TO_CLIENT 4
-#define MSGSZ sizeof(int)*5
+#define MSGSZ ((sizeof(int)*5)+sizeof(pid_t))
 #define TAILLE 400
 /*
  * Declaration des structures de message

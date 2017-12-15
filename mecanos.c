@@ -95,8 +95,9 @@ int main(int argc, char * argv[], char * envp[])
            fprintf(stderr,"Erreur de lecture dans la file\n");
 	    exit(-1);
         }
+        fprintf(stderr,"\nMessage Bien recus !\n");
         pid_caller = msg.params.caller;
-	
+        fprintf(stderr,"\n pid_caller: %d\n",pid_caller);
 	/*outil_1 = msg.params.nbOutils_1;
 	outil_2 = msg.params.nbOutils_2;
 	outil_3 = msg.params.nbOutils_3;
