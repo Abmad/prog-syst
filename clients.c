@@ -45,7 +45,7 @@ int main(int argc, char * argv[], char * envp[])
 	*/
 	
 	/*
-	*Mise en attente du chef le moin occupe
+	*Mise en attente du chef le moins occupe
 	*/
 	
 	/*

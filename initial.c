@@ -72,7 +72,7 @@ int main(int argc, char * argv[], char * envp[])
 	*Creation IPC (File de message + ensemble de semaphores)
 	*/
 	//Cle
-	cle = ftok("toto",'a');
+	cle = ftok("/tmp", 'S');
 	
 	//Ensemble de semaphores
 	semap = semget(cle,1,IPC_CREAT | IPC_EXCL | 0660);
@@ -93,7 +93,7 @@ int main(int argc, char * argv[], char * envp[])
     }
 	
 	//File de messages
-    file_init = msgget(cle, IPC_CREAT| IPC_EXCL | 0660);
+    file_init = msgget(cle, IPC_CREAT| IPC_EXCL | 0666);
     if (file_init == -1)
     {
     	printf("Erreur creation de file\n");
