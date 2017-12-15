@@ -89,7 +89,7 @@ int main(int argc, char * argv[], char * envp[])
          *Attente d'un client
          */
         
-        if (msgrcv(qid, &msg_client_rcv, MSGSZ, CLIENT_TO_CHEF, 0) < 0)
+        if (msgrcv(qid, &msg_client_rcv, MSGSZ, CLIENT_TO_CHEF, IPC_NOWAIT) < 0)
         {
             printf("Pb lecture de message\n\n");
             continue;
@@ -101,7 +101,7 @@ int main(int argc, char * argv[], char * envp[])
          *Postage du travail sur la file de message (c'est a lui de determiner la duree et le nb outils)
          */
         
-        if(msgsnd(qid,&msg_snd,MSGSZ,0)==-1)
+        if(msgsnd(qid,&msg_snd,MSGSZ,IPC_NOWAIT)==-1)
         {
             fprintf(stderr,"Pb envoie de message\n\n");
             continue;
@@ -117,7 +117,7 @@ int main(int argc, char * argv[], char * envp[])
         
         //attente de la reponse du mecanico
         
-        if (msgrcv(qid, &msg_rcv, MSGSZ, this_pid, 0)< 0)
+        if (msgrcv(qid, &msg_rcv, MSGSZ, this_pid, IPC_NOWAIT)< 0)
         {
             fprintf(stderr,"Pb lecture de message\n");
             continue;
@@ -128,7 +128,7 @@ int main(int argc, char * argv[], char * envp[])
         msg_snd=msg_rcv;
         msg_snd.msg_type = client_pid;
         
-        if(msgsnd(qid,&msg_snd,MSGSZ,0)==-1)
+        if(msgsnd(qid,&msg_snd,MSGSZ,IPC_NOWAIT)==-1)
         {
             fprintf(stderr,"Pb envoie de message\n\n");
             continue;
